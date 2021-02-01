@@ -1,0 +1,17 @@
+{
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+  	"exports": true,
+  	"console": true,
+  	"Symbol": true,
+  },
+  "parser": "babel-eslint"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "mattfire",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/mattfire.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development webpack",
+    "build": "NODE_ENV=production webpack",
+    "lint": "./node_modules/.bin/eslint ./src --ext .js",
+    "clean:build": "rm -rf ./dist"
+  },
+  "author": "Mattbob",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.18.0",
+    "eslint-loader": "^4.0.2",
+    "webpack": "^5.17.0",
+    "webpack-cli": "^4.4.0"
+  },
+  "dependencies": {
+    "firebase": "^8.2.4"
+  }
+}
