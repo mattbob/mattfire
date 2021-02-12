@@ -31,16 +31,11 @@ class Mattfire {
 		 * Set variables
 		 */
 		this.auth      = firebase.auth();
-		this.db        = firebase.firestore();
-		this.functions = firebase.functions();
 		this.timestamp = firebase.firestore.Timestamp;
 		this.field     = firebase.firestore.FieldValue;
 
-		//const auth      = this.auth;
-		const db        = this.db;
-		const functions = this.functions;
-		//const timestamp = this.timestamp;
-		//const field     = this.field;
+		const db        = firebase.firestore();
+		const functions = firebase.functions();
 
 		if ( debug ) functions.useEmulator( 'localhost', '5001' );
 
