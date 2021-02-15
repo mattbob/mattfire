@@ -216,13 +216,15 @@ class Mattfire {
 				return cloud_function( data )
 					.then( response => {
 						if ( debug ) console.log( 'CALLABLE RESPONSE:', response.data );
+
 						return response.data;
 					} )
 					.catch( error => {
 						if ( debug ) console.error( 'FIREBASE FUNCTIONS ERROR CODE:', error.code );
 						if ( debug ) console.error( 'FIREBASE FUNCTIONS ERROR MESSAGE:', error.message );
 						if ( debug ) console.error( 'FIREBASE FUNCTIONS ERROR DETAILS:', error.details );
-						return;
+
+						throw error;
 					} );
 			}, // call()
 
