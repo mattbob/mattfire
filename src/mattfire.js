@@ -33,7 +33,6 @@ class Mattfire {
 		this.auth      = firebase.auth();
 		this.timestamp = firebase.firestore.Timestamp;
 		this.field     = firebase.firestore.FieldValue;
-		this.config    = firebase.remoteConfig();
 
 		const db        = firebase.firestore();
 		const functions = firebase.functions();
