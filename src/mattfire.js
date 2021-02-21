@@ -174,6 +174,7 @@ class Mattfire {
 					this.collection = collection;
 					this.ref        = db.collection( this.collection );
 					this.queries    = [];
+					this.count      = null;
 				} // constructor()
 
 				async get() {
@@ -182,9 +183,13 @@ class Mattfire {
 					for ( const query of this.queries ) {
 						try {
 							this.ref = this.ref.where( query[0], query[1], query[2] );
-						} catch( error ) {
+						} catch ( error ) {
 							console.warn( 'FIREBASE ERROR CREATING QUERY', error.code, error.message );
 						}
+					}
+
+					if ( this.count ) {
+						this.ref.limit( this.count );
 					}
 
 					// Attempt the query
@@ -192,7 +197,7 @@ class Mattfire {
 						snapshot = await this.ref.get();
 
 					// Catch any errors (often related to permissions or an incorrect collection or id)
-					} catch( error ) {
+					} catch ( error ) {
 						console.error( 'FIREBASE ERROR ATTEMPTING TO GET A COLLECTION', error.code, error.message );
 						this.error = error.message;
 						return;
@@ -221,6 +226,11 @@ class Mattfire {
 
 					return this;
 				} // where()
+
+				limit( count ) {
+					this.count = count;
+					return this;
+				} // limit()
 			}, // collection
 		}; // this.db
 
