@@ -57,6 +57,7 @@ class Mattfire {
 					this.collection = collection;
 					this.id         = id;
 					this.ref        = null;
+					this.exists     = false;
 				} // constructor()
 
 				async get() {
@@ -71,7 +72,7 @@ class Mattfire {
 						snapshot = await this.ref.get();
 
 					// Catch any errors (often related to permissions or an incorrect collection or id)
-					} catch( error ) {
+					} catch ( error ) {
 						console.error( 'FIREBASE ERROR ATTEMPTING TO GET AN ITEM', error.code, error.message );
 						this.error = error.message;
 						return;
@@ -80,7 +81,8 @@ class Mattfire {
 					delete this.error; // There were no errors attempting the query
 
 					// Finally, if the snapshot exists set the data
-					this.data = snapshot.exists ? snapshot.data() : {};
+					this.data   = snapshot.exists ? snapshot.data() : {};
+					this.exists = snapshot.exists ? true : false;
 				} // get()
 
 				async create( data ) {
@@ -92,7 +94,7 @@ class Mattfire {
 							await this.ref.set( data );
 
 						// Catch any errors
-						} catch( error ) {
+						} catch ( error ) {
 							console.error( 'FIREBASE ERROR ATTEMPTING TO CREATE AN ITEM', error.code, error.message );
 							this.error = error.message;
 							return;
@@ -104,7 +106,7 @@ class Mattfire {
 							this.id  = this.ref.id;
 
 						// Catch any errors
-						} catch( error ) {
+						} catch ( error ) {
 							console.error( 'FIREBASE ERROR ATTEMPTING TO CREATE AN ITEM', error.code, error.message );
 							this.error = error.message;
 							return;
@@ -112,7 +114,7 @@ class Mattfire {
 					}
 
 					delete this.error; // There were no errors attempting the query
-					this.get(); // Get the date for this new item
+					await this.get(); // Get the date for this new item
 				} // create()
 
 				async update( data ) {
@@ -125,7 +127,7 @@ class Mattfire {
 						await this.ref.update( data );
 
 					// Catch any errors
-					} catch( error ) {
+					} catch ( error ) {
 						console.error( 'FIREBASE ERROR ATTEMPTING TO UPDATE AN ITEM', error.code, error.message );
 						this.error = error.message;
 						return;
@@ -135,7 +137,8 @@ class Mattfire {
 
 					// If we already have the item's data just merge in the new data to avoid another get request
 					if ( this.data ) {
-						this.data = { ...this.data, ...data };
+						this.data   = { ...this.data, ...data };
+						this.exists = true;
 
 					// Otherwise make sure we have the latest data for the item
 					} else {
@@ -143,8 +146,25 @@ class Mattfire {
 					}
 				} // update()
 
-				delete() {
+				async delete() {
+					if ( ! this.id ) return; // We absolutely need the item's id
 
+					this.ref = db.collection( this.collection ).doc( this.id );
+
+					try {
+						await this.ref.delete();
+					} catch ( error ) {
+						console.error( 'FIREBASE ERROR ATTEMPTING TO DELETE AN ITEM', error.code, error.message );
+						this.error = error.message;
+						return;
+					}
+
+					delete this.error; // There were no errors attempting the query
+
+					// Reset the class defaults
+					this.id     = null;
+					this.exists = false;
+					this.data   = {};
 				} // delete()
 			}, // doc
 
