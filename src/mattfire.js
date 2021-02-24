@@ -136,13 +136,13 @@ class Mattfire {
 					delete this.error; // There were no errors attempting the query
 
 					// If we already have the item's data just merge in the new data to avoid another get request
-					if ( this.data ) {
+					if ( Object.keys( this.data ).length ) {
 						this.data   = { ...this.data, ...data };
 						this.exists = true;
 
 					// Otherwise make sure we have the latest data for the item
 					} else {
-						this.get();
+						await this.get();
 					}
 				} // update()
 
@@ -211,6 +211,7 @@ class Mattfire {
 							item.collection = this.collection;
 							item.id         = doc.id;
 							item.ref        = doc.ref;
+							item.exists     = true;
 
 							return item;
 						} );
