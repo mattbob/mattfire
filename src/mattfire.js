@@ -34,7 +34,7 @@ class Mattfire {
 		this.timestamp = firebase.firestore.Timestamp;
 		this.field     = firebase.firestore.FieldValue;
 
-		const db        = firebase.firestore();
+		const firestore = firebase.firestore();
 		const functions = firebase.functions();
 
 		if ( debug ) functions.useEmulator( 'localhost', '5001' );
@@ -42,7 +42,7 @@ class Mattfire {
 		/**
 		 * Ensure persistence
 		 */
-		db.enablePersistence()
+		firestore.enablePersistence()
 			.catch( error => {
 				console.error( 'Firestore Persistence Error', error );
 			} );
@@ -65,7 +65,7 @@ class Mattfire {
 
 					if ( ! this.id ) return; // We absolutely need the item's id
 
-					this.ref = db.collection( this.collection ).doc( this.id );
+					this.ref = firestore.collection( this.collection ).doc( this.id );
 
 					// Attempt the query
 					try {
@@ -87,7 +87,7 @@ class Mattfire {
 
 				async create( data ) {
 					if ( this.id ) {
-						this.ref = db.collection( this.collection ).doc( this.id );
+						this.ref = firestore.collection( this.collection ).doc( this.id );
 
 						// Attempt the query
 						try {
@@ -102,7 +102,7 @@ class Mattfire {
 					} else {
 						// Attempt the query
 						try {
-							this.ref = await db.collection( this.collection ).add( data );
+							this.ref = await firestore.collection( this.collection ).add( data );
 							this.id  = this.ref.id;
 
 						// Catch any errors
@@ -120,7 +120,7 @@ class Mattfire {
 				async update( data ) {
 					if ( ! this.id ) return; // We absolutely need the item's id
 
-					this.ref = db.collection( this.collection ).doc( this.id );
+					this.ref = firestore.collection( this.collection ).doc( this.id );
 
 					// Attempt the query
 					try {
@@ -149,7 +149,7 @@ class Mattfire {
 				async delete() {
 					if ( ! this.id ) return; // We absolutely need the item's id
 
-					this.ref = db.collection( this.collection ).doc( this.id );
+					this.ref = firestore.collection( this.collection ).doc( this.id );
 
 					try {
 						await this.ref.delete();
@@ -172,7 +172,7 @@ class Mattfire {
 				constructor( collection ) {
 					this.data       = [];
 					this.collection = collection;
-					this.ref        = db.collection( this.collection );
+					this.ref        = firestore.collection( this.collection );
 					this.queries    = [];
 					this.count      = null;
 				} // constructor()
